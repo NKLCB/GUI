@@ -1,3 +1,4 @@
+import os
 import sys
 
 from PyQt5.QtWidgets import *
@@ -21,8 +22,7 @@ class TestWindow(QMainWindow, form_class):
 
         # Button to code
         self.checkVersionButton.clicked.connect(self.check_version)
-        #self.fileSelectButton.clicked.connect(self.file_select)
-        self.fileSelectButton.clicked.connect(self.show_second_window)
+        self.fileSelectButton.clicked.connect(self.file_select)
         self.folderSelectButton.clicked.connect(self.folder_select)
 
     def start_test(self):
@@ -33,17 +33,20 @@ class TestWindow(QMainWindow, form_class):
         #self.statusBar().showMessage('Push Check Version Button')
         pass
 
-    def show_second_window(self, checked):
-        if self.second_w is None:
-            self.second_w = AnotherWindow()
-        self.second_w.show()
-
-    def file_select(self):
+    def file_select(self, checked):
         #self.statusBar().showMessage('Push file select Button')
         fname = QFileDialog.getOpenFileName(self, 'Open file', './')
 
+        if fname[0]:
+            f = open(fname[0], 'r')
 
+            with f:
+                print(f.name)
+                filename = os.path.basename(f.name)
 
+        if self.second_w is None:
+            self.second_w = AnotherWindow(filename)
+        self.second_w.show()
 
     def folder_select(self):
         #self.statusBar().showMessage('Push folder select Button')
@@ -52,10 +55,13 @@ class TestWindow(QMainWindow, form_class):
 
 class AnotherWindow(QWidget):
 
-    def __init__(self):
+    filename = None
+
+    def __init__(self, filename):
         super().__init__()
         layout = QVBoxLayout()
-        self.label = QLabel("")
+        self.setGeometry(350,350,400,140)
+        self.label = QLabel("% s" % filename)
         layout.addWidget(self.label)
         self.setLayout(layout)
 
