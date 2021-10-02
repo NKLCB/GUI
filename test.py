@@ -2,12 +2,14 @@ import os
 import sys
 
 from PyQt5.QtWidgets import *
+from PyQt5.QtCore import QCoreApplication
 from PyQt5 import uic
 
-form_class = uic.loadUiType("first_screen.ui")[0]
+first_screen = uic.loadUiType("first_screen.ui")[0]
+second_screen = uic.loadUiType("second_screen.ui")[0]
 
 
-class TestWindow(QMainWindow, form_class):
+class TestWindow(QMainWindow, first_screen):
 
     def __init__(self):
         super().__init__()
@@ -42,10 +44,11 @@ class TestWindow(QMainWindow, form_class):
 
             with f:
                 print(f.name)
-                filename = os.path.basename(f.name)
+                #filename = os.path.basename(f.name)
+                filename = f.name
 
         if self.second_w is None:
-            self.second_w = AnotherWindow(filename)
+            self.second_w = SecondWindow(filename)
         self.second_w.show()
 
     def folder_select(self):
@@ -53,17 +56,21 @@ class TestWindow(QMainWindow, form_class):
         pass
 
 
-class AnotherWindow(QWidget):
+class SecondWindow(QMainWindow, second_screen):
 
     filename = None
 
     def __init__(self, filename):
         super().__init__()
-        layout = QVBoxLayout()
+        self.setupUi(self)
         self.setGeometry(350,350,400,140)
-        self.label = QLabel("% s" % filename)
-        layout.addWidget(self.label)
-        self.setLayout(layout)
+        self.setFixedSize(400,140)
+        self.label = QLabel("% s" % filename, self)
+        self.cancelButton.clicked.connect(QCoreApplication.instance().quit)
+        self.scanButton.clicked.connect(self.test_status)
+
+    def test_status(self):
+        self.statusBar().showMessage('Push Start Scan Button')
 
 
 if __name__=="__main__":
