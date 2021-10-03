@@ -2,7 +2,7 @@ import os
 import sys
 
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import QCoreApplication
+from PyQt5.QtCore import QCoreApplication, QBasicTimer
 from PyQt5 import uic
 
 first_screen = uic.loadUiType("first_screen.ui")[0]
@@ -71,6 +71,21 @@ class SecondWindow(QMainWindow, second_screen):
 
     def test_status(self):
         self.statusBar().showMessage('Push Start Scan Button')
+
+
+class ThirdWindow(object): #QMainWindoW?, progress
+
+    def __init__(self):
+        self.setupUi()
+
+    def setupUi(self, third_screen):
+        third_screen.setObjectName("third_screen")
+        third_screen.resize(400, 140)
+        self.setWindowTitle("NeKaBe")
+
+
+
+#class FinalWindow(object): #Result
 
 
 if __name__=="__main__":
